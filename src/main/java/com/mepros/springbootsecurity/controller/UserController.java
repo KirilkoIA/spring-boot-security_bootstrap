@@ -22,21 +22,21 @@ public class UserController {
 
     @GetMapping(value = "/")
     public String printHomePage(ModelMap model) {
-        return "home";
+        return "redirect:/login";
     }
 
     @GetMapping(value = "/admin")
     public String printUsersPage(ModelMap model) {
         List<User> users = userService.getAllUsers();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User newUser = new User();
+        User editUser = new User();
+        model.addAttribute("admin", user);
         model.addAttribute("usersList", users);
-        return "index";
-    }
-
-    @GetMapping("/admin/add")
-    public String showSignUpForm(User user, ModelMap model) {
+        model.addAttribute("newUser", newUser);
+        model.addAttribute("editUser", editUser);
         model.addAttribute("rolesSet", userService.getAllRoles());
-        model.addAttribute("user", user);
-        return "add-user";
+        return "index";
     }
 
     @PostMapping("/admin/add")
@@ -52,17 +52,8 @@ public class UserController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/edit/{id}")
-    public String showUpdateForm(@PathVariable("id") long id, Model model) {
-        User user = userService.getUserById(id);
-        model.addAttribute("rolesSet", userService.getAllRoles());
-        model.addAttribute("user", user);
-        return "update-user";
-    }
-
-    @PostMapping("/admin/edit/{id}")
-    public String updateUser(@ModelAttribute("user")@PathVariable("id") long id, User user, String[] myRoles) {
-        user.setId(id);
+    @PostMapping("/admin/edit")
+    public String updateUser(@ModelAttribute("user") User user, String[] myRoles) {
         Set<Role> setRoles = new HashSet<>();
 
         for (String roleName : myRoles) {
@@ -75,14 +66,9 @@ public class UserController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/delete/{id}")
-    public String showDeletePage(@PathVariable("id") long id) {
-        return "deletePage";
-    }
-
-    @DeleteMapping("/admin/delete/{id}")
-    public String userDelete(@PathVariable("id") long id) {
-        userService.removeUserById(id);
+    @PostMapping("/admin/delete")
+    public String userDelete(@ModelAttribute("user") User user) {
+        userService.removeUserById(user.getId());
         return "redirect:/admin";
     }
 

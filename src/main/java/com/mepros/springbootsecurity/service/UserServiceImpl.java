@@ -60,6 +60,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
+
+    @Override
     public Role getRoleByName(String name) {
         return roleRepository.findRoleByName(name);
     }
@@ -69,4 +74,5 @@ public class UserServiceImpl implements UserService{
     public Set<Role> getAllRoles() {
         return new HashSet<Role>(roleRepository.findAll());
     }
+
 }

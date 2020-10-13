@@ -140,4 +140,17 @@ public class User implements UserDetails {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+    public String getRolesName() {
+        StringBuilder names = new StringBuilder();
+        for (Role role: roles) {
+            if (role.getName().equals("ROLE_ADMIN")) {
+                names.append("Admin ");
+            }
+            else if (role.getName().equals("ROLE_USER")) {
+                names.append("User ");
+            }
+        }
+        return String.valueOf(names);
+    }
 }

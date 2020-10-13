@@ -43,16 +43,16 @@ public class SecurityCfg extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/admin/add").access("hasAnyRole('ROLE_ADMIN')")
-                .antMatchers("/admin/edit/{id}").access("hasAnyRole('ROLE_ADMIN')")
-                .antMatchers("/admin/delete/{id}").access("hasAnyRole('ROLE_ADMIN')");
+                .antMatchers("/admin/edit").access("hasAnyRole('ROLE_ADMIN')")
+                .antMatchers("/admin/delete").access("hasAnyRole('ROLE_ADMIN')");
 
         http.authorizeRequests().and().exceptionHandling().accessDeniedPage("/403");
 
         http.authorizeRequests().and().formLogin()
                 .successHandler(userHandler)
                 .failureUrl("/login?error=true")
-                .usernameParameter("username")
-                .passwordParameter("password")
+                .usernameParameter("Email address")
+                .passwordParameter("Password")
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login");
     }
     // Необходимо для шифрования паролей
